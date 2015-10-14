@@ -1,0 +1,43 @@
+#!/usr/bin/python
+#
+# Unzip with specific encoding
+# Support encoding can be found here:
+# https://docs.python.org/2/library/codecs.html#standard-encodings
+#
+
+import os
+import zipfile
+import sys
+
+def ShowHelp():
+    print """
+Usage: unzip_enc zipfile encoding.
+
+zipfile: path of file to be unzip.
+
+encoding: support encoding can be found in https://docs.python.org/2/library/codecs.html#standard-encodings.
+"""
+
+
+if __name__ == '__main__':
+    if len(sys.argv) < 3:
+        ShowHelp()
+        exit(1)
+    with zipfile.ZipFile(sys.argv[1]) as z:
+        codec = sys.argv[2]
+        for fileinfo in z.filelist:
+            encode_path = fileinfo.filename.decode(codec).encode('utf_8')
+            print 'unzip %s ' % encode_path
+            path, filename = os.path.split(encode_path)
+            if path and not os.path.isdir(path):
+                os.makedirs(path)
+
+            if filename:
+                yn = True
+                if os.path.isfile(encode_path):
+                    yn = input('If replace file %s (y/N):' % encode_path)
+                    yn = yn.find('y') != -1 or yn.find('Y') != -1
+                if yn:
+                    with open(encode_path, 'w') as f:
+                        f.write(z.read(fileinfo.filename))
+
