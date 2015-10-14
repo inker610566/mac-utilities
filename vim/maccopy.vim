@@ -8,7 +8,7 @@ function! s:CopyThruExFile(lines)
     let tempfile = tempname()
     call writefile(a:lines, tempfile)
     call system('pbcopy < '.tempfile)
-    call system('rm '.tempfile)
+    call delete(tempfile)
 endfunc
 
 func! g:MacCopy(number)
