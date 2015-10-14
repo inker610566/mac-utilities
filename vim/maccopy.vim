@@ -45,7 +45,7 @@ func! g:MacCopy(number)
             for i in range(sy+1, dy-1)
                 let output = add(output, getline(i))
             endfor
-            let output = add(output, getline(sy)[:dx-1])
+            let output = add(output, getline(dy)[:dx-1])
         endif
         call s:CopyThruExFile(output)
     endif
