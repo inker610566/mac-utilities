@@ -1,16 +1,11 @@
-python << ENDPYTHON
-def FindCscope():
-    from os import path
-    import vim
-    curpath, dirpath  = '', vim.eval('expand(\'%:p:h\')')
-    while curpath != dirpath:
-        curpath = dirpath
-        if path.isfile(path.join(curpath, 'cscope.out')):
-            vim.command("cs add %s" % path.join(curpath, 'cscope.out'))
-            break
-        dirpath, _ = path.split(curpath)
-ENDPYTHON
-
-if has('cscope')
-    python FindCscope()
-end
+" from http://vim.wikia.com/wiki/Autoloading_Cscope_Database
+function! LoadCscope()
+  let db = findfile("cscope.out", ".;")
+  if (!empty(db))
+    let path = strpart(db, 0, match(db, "/cscope.out$"))
+    set nocscopeverbose " suppress 'duplicate connection' error
+    exe "cs add " . db . " " . path
+    set cscopeverbose
+  endif
+endfunction
+au BufEnter /* call LoadCscope()
