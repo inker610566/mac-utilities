@@ -6,11 +6,11 @@ def FindCscope():
     while curpath != dirpath:
         curpath = dirpath
         if path.isfile(path.join(curpath, 'cscope.out')):
-            print path.join(curpath, 'cscope.out')
-            vim.command("call setline('.', '1122')")
+            vim.command("cs add %s" % path.join(curpath, 'cscope.out'))
             break
         dirpath, _ = path.split(curpath)
 ENDPYTHON
 
-
-autocmd Filetype java set nonu
+if has('cscope')
+    python FindCscope()
+end
