@@ -4,7 +4,10 @@ if !exists('g:macpaste')
 endif
 
 func! g:MacPaste()
-    let paste = system('pbpaste')[:-1]
+    let paste = system('pbpaste')
+    if paste[-1:-1] == "\n"
+        let paste = paste[:-2]
+    endif
     if v:shell_error == 0
         let rega = getreg('a')
         call setreg('a', paste)
